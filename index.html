@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación - Quince Años de Nataly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto:wght@300;400;500&family=Playfair+Display&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos para el sobre de invitación - SIMPLIFICADO */
+        .invitation-envelope {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1d9b9f 0%, #2f5e6a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: all 1s ease;
+            font-family: 'Dancing Script', cursive;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .envelope-closed {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .envelope-open {
+            opacity: 0;
+            transform: scale(1.5);
+            pointer-events: none;
+        }
+        
+        .envelope-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .envelope-subtitle {
+            font-size: 20px;
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+        
+        .envelope-container {
+            position: relative;
+            width: 280px;
+            height: 200px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        
+        .envelope-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+            transition: all 0.5s ease;
+        }
+        
+        .envelope-container:hover .envelope-image {
+            transform: scale(1.05);
+        }
+        
+        .envelope-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #2f5e6a;
+            width: 80%;
+        }
+        
+        .content-title {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .content-subtitle {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .open-invitation-btn {
+            background-color: #1d9b9f;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+        
+        .open-invitation-btn:hover {
+            background-color: #2f5e6a;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .envelope-instruction {
+            font-size: 16px;
+            font-style: italic;
+            margin-top: 20px;
+            color: white;
+            max-width: 400px;
+        }
+
+        /* Estilo de respaldo si la imagen no carga */
+        .fallback-envelope {
+            display: none;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            width: 280px;
+            height: 200px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+            color: #2f5e6a;
+        }
+        
+        .envelope-image.error {
+            display: none;
+        }
+        
+        .envelope-image.error + .fallback-envelope {
+            display: flex;
+        }
+        
+        .invitation-content {
+            display: none;
+        }
+        
+        .invitation-content.show {
+            display: block;
+        }
+
+        /* Estilos generales mejorados */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #1d9b9f;
+            --secondary-color: #7cc7d5;
+            --accent-color: #a3d6e0;
+            --dark-color: #2f5e6a;
+            --light-color: #f8f9fa;
+            --white: #ffffff;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            scroll-behavior: smooth;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 60px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .btn:hover {
+            background-color: #1e7c8f;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+        }
+        
+        /* Botón de música flotante */
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .music-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Hero Section mejorada */
+        .hero {
+            background: linear-gradient(rgba(163, 214, 224, 0.85), rgba(124, 199, 213, 0.75)), 
+                        url('./images/quinceanera.png') no-repeat center center/cover;
+        }
+        
+        .hero h1 {
+            font-size: 72px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+            animation: fadeInDown 1s ease;
+            position: relative;
+        }
+        
+        .hero h1::after {
+            content: '';
+            display: block;
+            width: 500px;
+            height: 3px;
+            background: white;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.8;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+        
+        .hero .section-title {
+            animation: fadeInUp 1s ease 1s both;
+        }
+        
+        /* Countdown Section mejorada */
+        .countdown {
+            background-color: var(--accent-color);
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .countdown h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .countdown-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 100px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-color);
+        }
+        
+        .countdown-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .countdown-item:nth-child(1) { transition-delay: 0.1s; }
+        .countdown-item:nth-child(2) { transition-delay: 0.2s; }
+        .countdown-item:nth-child(3) { transition-delay: 0.3s; }
+        .countdown-item:nth-child(4) { transition-delay: 0.4s; }
+        
+        .countdown-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .countdown-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+        }
+        
+        /* Parents Section mejorada - CENTRADA Y CON FONDO PERSONALIZADO */
+        .parents {
+            background-color: white;
+            text-align: center;
+            background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
+                        url('./images/parents.png') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+        
+        .parents-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+        }
+        
+        .parent-card {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .parent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(29, 155, 159, 0.05) 0%, rgba(124, 199, 213, 0.05) 100%);
+            z-index: 0;
+        }
+        
+        .parent-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .parent-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .parent-card p {
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            position: relative;
+            line-height: 1.5;
+        }
+        
+        /* Invitation Section mejorada */
+        .invitation {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .invitation h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+        }
+        
+        .invitation .section-title h2 {
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            font-weight: 700;
+        }
+        
+        .date-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .date-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+        
+        .date-item.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .date-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .date-text {
+            font-size: 18px;
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .calendar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 300px;
+            margin: 0 auto 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: var(--dark-color);
+            opacity: 0;
+            transform: rotateY(90deg);
+            transition: all 0.8s ease;
+            position: relative;
+        }
+        
+        .calendar.visible {
+            opacity: 1;
+            transform: rotateY(0);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-month {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--primary-color);
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            padding: 8px 5px;
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .calendar-day.header {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .calendar-day.event {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+        }
+        
+        /* Location Section mejorada */
+        .location {
+            background-color: white;
+            background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
+                        url('./images/iglesia_int.png') no-repeat center center/cover;
+        }
+        
+        .location-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .location-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .location-map {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.6s ease;
+            position: relative;
+        }
+        
+        .location-map.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .location-map iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.5s ease;
+        }
+        
+        .info-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .info-item:nth-child(1) { transition-delay: 0.1s; }
+        .info-item:nth-child(2) { transition-delay: 0.2s; }
+        
+        .info-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            color: var(--primary-color);
+            min-width: 25px;
+        }
+        
+        .info-text {
+            flex: 1;
+        }
+        
+        .info-text h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+        }
+        
+        .info-text p {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+        }
+        
+        /* Program Section - DISEÑO CORREGIDO */
+        .program {
+            background-color: var(--accent-color);
+            padding: 40px 0;
+        }
+        
+        .program h1 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4em;
+            color: var(--dark-color);
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Línea central CORREGIDA */
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--primary-color);
+        }
+
+        /* Cada evento */
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.4s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item:nth-child(1) { transition-delay: 0.1s; }
+        .timeline-item:nth-child(2) { transition-delay: 0.2s; }
+        .timeline-item:nth-child(3) { transition-delay: 0.3s; }
+        .timeline-item:nth-child(4) { transition-delay: 0.4s; }
+        .timeline-item:nth-child(5) { transition-delay: 0.5s; }
+        .timeline-item:nth-child(6) { transition-delay: 0.6s; }
+
+        .timeline-item.left {
+            left: 0;
+            text-align: right;
+        }
+
+        .timeline-item.right {
+            left: 50%;
+            text-align: left;
+        }
+
+        /* Punto central */
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            top: 30px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .timeline-item.left::before {
+            right: -6px;
+        }
+
+        .timeline-item.right::before {
+            left: -6px;
+        }
+
+        /* Contenedor del contenido */
+        .timeline-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Ajuste según lado */
+        .timeline-item.left .timeline-content {
+            justify-content: flex-end;
+        }
+
+        .timeline-item.right .timeline-content {
+            justify-content: flex-start;
+        }
+
+        /* Iconos */
+        .icon {
+            font-size: 1.6em;
+        }
+
+        .text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .time {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: var(--dark-color);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .desc {
+            font-family: 'Dancing Script', cursive;
+            color: var(--dark-color);
+            font-size: 1.05em;
+            margin-top: 2px;
+        }
+
+        /* Celebration Section - MODIFICADA */
+        .celebration {
+            background-color: white;
+            text-align: center;
+        }
+        
+        .celebration p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 18px;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .celebration p.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Contenedor de imagen y mapa para la celebración */
+        .celebration-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .celebration-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+            position: relative;
+        }
+        
+        .celebration-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .celebration-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .celebration-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .celebration-map {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.6s ease;
+            position: relative;
+        }
+        
+        .celebration-map.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .celebration-map iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+        
+        /* Confirmation Section mejorada */
+        .confirmation {
+            background-color: white;
+            text-align: center;
+        }
+        
+        .confirmation p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 18px;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .confirmation p.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .ticket-selector {
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .ticket-selector.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .ticket-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .ticket-selector select {
+            padding: 10px 15px;
+            border-radius: 30px;
+            border: 2px solid var(--primary-color);
+            background-color: white;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: var(--dark-color);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .ticket-selector select:focus {
+            box-shadow: 0 0 0 3px rgba(29, 155, 159, 0.3);
+        }
+        
+        /* Estilos actualizados para el footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signature-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .signature {
+            display: inline-block;
+            text-align: right;
+        }
+
+        .signature-text {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            color: white;
+            margin-right: 10px;
+            display: inline;
+        }
+
+        .signature-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            color: var(--primary-color);
+            font-weight: 700;
+            display: inline;
+        }
+        
+        .contact-info {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .contact-btn:hover {
+            background-color: #1e7c8f;
+            transform: translateY(-2px);
+        }
+        
+        /* Animaciones clave */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Imagen en sección de invitación - EFECTO DE LIBRO */
+        .invitation-image {
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            perspective: 1000px;
+        }
+        
+        .book-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            transition: transform 1.5s ease;
+        }
+        
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/libro_quince.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform-origin: left center;
+            transition: transform 1.5s ease;
+            backface-visibility: hidden;
+            z-index: 2;
+        }
+        
+        .book-pages {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .book-content {
+            width: 100%;
+            height: 100%;
+            background-image: url('images/quince.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+        }
+        
+        /* Efecto de arillos en el lado izquierdo */
+        .book-cover::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(to right, 
+                rgba(0,0,0,0.1) 0%, 
+                rgba(0,0,0,0.05) 20%, 
+                rgba(0,0,0,0.02) 40%, 
+                transparent 60%);
+            border-radius: 5px;
+            z-index: 3;
+        }
+        
+        /* Efecto de páginas */
+        .book-pages::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, 
+                transparent 0%, 
+                rgba(255,255,255,0.2) 2%, 
+                rgba(255,255,255,0.1) 5%, 
+                transparent 10%);
+            z-index: 1;
+        }
+        
+        /* Animación al hacer scroll */
+        .book-container.scrolled {
+            transform: rotateY(-15deg);
+        }
+        
+        .book-container.scrolled .book-cover {
+            transform: rotateY(-160deg);
+        }
+        
+        /* Responsive - CORRECCIONES IMPORTANTES */
+        @media (max-width: 700px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 20px;
+                text-align: left;
+            }
+
+            .timeline-item.left, .timeline-item.right {
+                left: 0;
+            }
+
+            .timeline-item::before {
+                left: 14px;
+            }
+
+            .timeline-content {
+                justify-content: flex-start !important;
+            }
+            
+            .timeline-item.left .timeline-content {
+                flex-direction: row;
+            }
+            
+            .timeline-item.right .timeline-content {
+                flex-direction: row;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 52px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .countdown-item {
+                min-width: 80px;
+                padding: 15px 10px;
+            }
+            
+            .countdown-number {
+                font-size: 28px;
+            }
+            
+            .date-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .invitation .section-title h2 {
+                font-size: 36px;
+            }
+            
+            .signature {
+                text-align: center;
+            }
+            
+            /* Estilos para la sección de padres en móvil */
+            .parents-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .parent-card {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+            
+            .parent-card p {
+                display: block;
+                margin-bottom: 5px;
+            }
+            
+            /* Ajustes para el sobre en móvil */
+            .envelope-container {
+                width: 250px;
+                height: 180px;
+            }
+            
+            .envelope-title {
+                font-size: 30px;
+            }
+            
+            .envelope-subtitle {
+                font-size: 18px;
+            }
+            
+            .envelope-instruction {
+                font-size: 14px;
+            }
+            
+            .content-title {
+                font-size: 20px;
+            }
+            
+            .content-subtitle {
+                font-size: 14px;
+            }
+            
+            .open-invitation-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .invitation-image img {
+                max-width: 250px;
+            }
+            
+            /* Ajustes para el libro en móvil */
+            .book-container {
+                width: 250px;
+                height: 350px;
+            }
+            
+            /* Ajustes para la sección de celebración en móvil */
+            .celebration-container {
+                flex-direction: column;
+            }
+            
+            .celebration-image, .celebration-map {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 42px;
+            }
+            
+            .invitation .section-title h2 {
+                font-size: 32px;
+            }
+            
+            .countdown-item {
+                min-width: 70px;
+                padding: 10px 5px;
+            }
+            
+            .countdown-number {
+                font-size: 24px;
+            }
+            
+            .parent-card {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .envelope-container {
+                width: 220px;
+                height: 160px;
+            }
+            
+            .envelope-title {
+                font-size: 26px;
+            }
+            
+            .envelope-subtitle {
+                font-size: 16px;
+            }
+            
+            .content-title {
+                font-size: 18px;
+            }
+            
+            .content-subtitle {
+                font-size: 13px;
+            }
+            
+            .invitation-image img {
+                max-width: 200px;
+            }
+            
+            /* Ajustes para el libro en móvil pequeño */
+            .book-container {
+                width: 200px;
+                height: 280px;
+            }
+        }
+        
+        /* Estilo para el nombre en el hero */
+        .name-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .first-name {
+            font-size: 85px;
+            display: block;
+            line-height: 1;
+        }
+        
+        .last-name {
+            font-size: 40px;
+            display: block;
+            line-height: 1;
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sobre de invitación - SIMPLIFICADO -->
+    <div class="invitation-envelope envelope-closed" id="invitationEnvelope">
+        <div class="envelope-title">¡Tienes una invitación!</div>
+        <div class="envelope-subtitle">Haz clic en el sobre para descubrir una sorpresa especial</div>
+        
+        <div class="envelope-container" id="envelopeContainer">
+            <!-- Solo una imagen del sobre -->
+            <img src="./images/sobre.png" 
+                 alt="Sobre de invitación" 
+                 class="envelope-image" 
+                 id="envelopeImage"
+                 onerror="handleImageError(this)">
+            
+            <!-- Solo un respaldo si la imagen falla -->
+            <div class="fallback-envelope">
+                <div class="content-title">Nataly García Millán</div>
+                <div class="content-subtitle">Cumple 15 años</div>
+                <div class="content-subtitle">21 de Febrero, 2026</div>
+            </div>
+            
+            <!-- Solo un botón de acción -->
+            <div class="envelope-content">
+                <button class="open-invitation-btn" onclick="openEnvelope()">Abrir Invitación</button>
+            </div>
+        </div>
+        
+        <div class="envelope-instruction">Haz clic en el sobre para abrirlo</div>
+    </div>
+
+    <!-- Contenido de la invitación -->
+    <div class="invitation-content" id="invitationContent">
+        <!-- Botón de música flotante -->
+        <div class="music-toggle" id="musicToggle">
+            <i class="fas fa-music"></i>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="name-container">
+                    <span class="first-name" style="color: white; font-family: 'Dancing Script', cursive; font-weight: 700;">Nataly</span>
+                    <span class="last-name" style="color: white; font-family: 'Dancing Script', cursive; font-weight: 700;">García Millán</span>
+                </div>
+                <p style="text-align: center; font-style: italic;">Hoy mi corazón se llena de ilusión y esperanza. Celebro mis quince años, un sueño hecho realidad, y quiero que formes parte de esta historia mágica.</p>
+                <div class="section-title">
+                    <h2>Reserva este día</h2>
+                    <h3>21 | Febrero | 2026</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Countdown Section -->
+        <section class="countdown" id="countdown">
+            <div class="container">
+                <h2>¡Tan solo faltan!</h2>
+                <div class="countdown-container">
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="days">00</div>
+                        <div class="countdown-label">Días</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="hours">00</div>
+                        <div class="countdown-label">Horas</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="minutes">00</div>
+                        <div class="countdown-label">Minutos</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="seconds">00</div>
+                        <div class="countdown-label">Segundos</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parents Section - CENTRADA Y CON FONDO PERSONALIZADO -->
+        <section class="parents" id="parents">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Con la bendición de mis...</h2>
+                </div>
+                <div class="parents-container">
+                    <div class="parent-card">
+                        <h3>Madre</h3>
+                        <p>Andrea Millán Hernández</p>
+                    </div>
+                    <div class="parent-card">
+                        <h3>Abuelos</h3>
+                        <p>Má. Eugenia Hernández Chávez</p>
+                        <p>Catalino Millán Hernández</p>
+                    </div>
+                    <div class="parent-card">
+                        <h3>Madrina</h3>
+                        <p>Citlalli Torres Talaver</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invitation Section -->
+        <section class="invitation" id="invitation">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Tenemos el agrado de invitarte a...</h2>
+                </div>
+                
+                <!-- Imagen con efecto de libro según solicitud -->
+                <div class="invitation-image">
+                    <div class="book-container" id="bookContainer">
+                        <div class="book-cover"></div>
+                        <div class="book-pages">
+                            <div class="book-content"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="date-container">
+                    <div class="date-item">
+                        <div class="date-icon"><i class="far fa-calendar-alt"></i></div>
+                        <div class="date-text">21 Febrero 2026</div>
+                    </div>
+                </div>
+                
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <div class="calendar-month">Febrero 2026</div>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day header">Lun</div>
+                        <div class="calendar-day header">Mar</div>
+                        <div class="calendar-day header">Mié</div>
+                        <div class="calendar-day header">Jue</div>
+                        <div class="calendar-day header">Vie</div>
+                        <div class="calendar-day header">Sáb</div>
+                        <div class="calendar-day header">Dom</div>
+                        
+                        <!-- Calendar days will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <a href="#" class="btn" id="addToCalendar">Agendar Fecha</a>
+            </div>
+        </section>
+
+        <!-- Location Section -->
+        <section class="location" id="location">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Ceremonia Religiosa</h2>
+                </div>
+                
+                <div class="location-container">
+                    <div class="location-info">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="info-text">
+                                <h3>Dirección</h3>
+                                <p><strong>Parroquia de Santiago Apostol</strong>. Josefa Ortíz de Dominguez, Santiago Tianguistenco</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-text">
+                                <h3>Horario</h3>
+                                <p>4:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="location-map">
+                        <!-- Mapa actualizado con las coordenadas especificadas -->
+                        <iframe src="https://maps.google.com/maps?q=19.18193805403935,-99.4685605126945&z=17&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Program Section -->
+        <section class="program" id="program">
+            <div class="container">
+                <h1>Itinerario</h1>
+                
+                <div class="timeline">
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <div class="icon">⛪</div>
+                            <div class="text">
+                                <span class="time">04:00 pm</span>
+                                <span class="desc">Ceremonia religiosa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <div class="text">
+                                <span class="time">05:00 pm</span>
+                                <span class="desc">Recepción</span>
+                            </div>
+                            <div class="icon">📅</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <div class="icon">🍷</div>
+                            <div class="text">
+                                <span class="time">06:00 pm</span>
+                                <span class="desc">Bocadillos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <div class="text">
+                                <span class="time">07:00 pm</span>
+                                <span class="desc">Baile de quinceañera</span>
+                            </div>
+                            <div class="icon">💃</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <div class="icon">🎉</div>
+                            <div class="text">
+                                <span class="time">08:00 pm</span>
+                                <span class="desc">Fiesta</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <div class="text">
+                                <span class="time">01:00 am</span>
+                                <span class="desc">Fin de fiesta</span>
+                            </div>
+                            <div class="icon">🌙</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Celebration Section - MODIFICADA -->
+        <section class="celebration" id="celebration">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Celebración</h2>
+                </div>
+                
+                <p>Al final de la ceremonia, te invitamos a acompañarnos para celebrar juntos en el Jardín La Cabaña ubicado en Santiago Tianguistenco.</p>
+                
+                <!-- Contenedor de imagen y mapa para la celebración -->
+                <div class="celebration-container">
+                    <div class="celebration-image">
+                        <img src="images/jardin_cabana.png" alt="Jardín La Cabaña">
+                    </div>
+                    
+                    <div class="celebration-map">
+                        <!-- Mapa con las coordenadas especificadas -->
+                        <iframe src="https://maps.google.com/maps?q=19.176649337332424,-99.46352691588334&z=17&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Confirmation Section -->
+        <section class="confirmation" id="confirmation">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Confirmación de Asistencia</h2>
+                </div>
+                
+                <p>Haznos saber que me acompañarás en este evento tan especial para mí</p>
+                
+                <div class="ticket-selector">
+                    <label for="ticketCount">Número de Boletos:</label>
+                    <select id="ticketCount">
+                        <option value="" disabled selected>Selecciona el número de boletos</option>
+                        <option value="1">1 Boleto</option>
+                        <option value="2">2 Boletos</option>
+                        <option value="3">3 Boletos</option>
+                        <option value="4">4 Boletos</option>
+                    </select>
+                </div>
+                
+                <a href="#" class="btn" id="confirmAttendance">Confirmar Asistencia</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="signature-container">
+                        <div class="signature">
+                            <span class="signature-text">Con Cariño,</span>
+                            <span class="signature-name">Nataly</span>
+                        </div>
+                    </div>
+                    <div class="contact-info">
+                        <p>Si te gustó esta invitación digital,
+                        <a href="https://wa.me/525564950944?text=Quiero%20Informaci%C3%B3n%20Acerca%20de%20la%20Invitaci%C3%B3n%20Digital" class="contact-btn" target="_blank">Contáctanos</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Audio -->
+        <audio id="backgroundMusic" loop>
+            <source src="./sound/sound.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+    </div>
+
+    <script>
+        // Función para manejar errores de carga de imagen
+        function handleImageError(img) {
+            console.log('La imagen del sobre no se pudo cargar, mostrando respaldo');
+            img.classList.add('error');
+        }
+
+        // Control del sobre de invitación
+        function openEnvelope() {
+            const invitationEnvelope = document.getElementById('invitationEnvelope');
+            const invitationContent = document.getElementById('invitationContent');
+            
+            // Animación de apertura del sobre
+            invitationEnvelope.classList.remove('envelope-closed');
+            invitationEnvelope.classList.add('envelope-open');
+            
+            // Mostrar el contenido de la invitación después de la animación
+            setTimeout(function() {
+                invitationContent.classList.add('show');
+                // Iniciar animaciones de scroll
+                checkVisibility();
+                // Iniciar efecto del libro
+                initBookEffect();
+            }, 1000);
+        }
+
+        // Configurar eventos de clic
+        document.addEventListener('DOMContentLoaded', function() {
+            const envelopeContainer = document.getElementById('envelopeContainer');
+            const envelopeImage = document.getElementById('envelopeImage');
+            
+            envelopeContainer.addEventListener('click', openEnvelope);
+            envelopeImage.addEventListener('click', openEnvelope);
+        });
+
+        // Efecto del libro animado
+        function initBookEffect() {
+            const bookContainer = document.getElementById('bookContainer');
+            
+            // Verificar si el libro está en el viewport
+            function checkBookVisibility() {
+                const rect = bookContainer.getBoundingClientRect();
+                const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                
+                // Si el libro está visible en el viewport
+                if (rect.top <= windowHeight * 0.8 && rect.bottom >= 0) {
+                    // Calcular el porcentaje de scroll dentro de la sección
+                    const section = document.getElementById('invitation');
+                    const sectionRect = section.getBoundingClientRect();
+                    const scrollProgress = 1 - (sectionRect.top / (sectionRect.height - windowHeight));
+                    
+                    // Aplicar transformación basada en el progreso del scroll
+                    if (scrollProgress > 0.2) {
+                        bookContainer.classList.add('scrolled');
+                    } else {
+                        bookContainer.classList.remove('scrolled');
+                    }
+                }
+            }
+            
+            // Escuchar eventos de scroll
+            window.addEventListener('scroll', checkBookVisibility);
+            // Verificar al cargar
+            checkBookVisibility();
+        }
+
+        // Conteo regresivo hasta el 21 de febrero de 2026
+        function updateCountdown() {
+            const eventDate = new Date('February 21, 2026 16:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+            }
+        }
+        
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // Generar calendario de febrero 2026
+        function generateCalendar() {
+            const calendarGrid = document.querySelector('.calendar-grid');
+            const monthDays = 28; // Febrero 2026 tiene 28 días
+            const firstDay = 6; // 1 de febrero de 2026 es domingo (0)
+            
+            // Limpiar días existentes (excepto encabezados)
+            while (calendarGrid.children.length > 7) {
+                calendarGrid.removeChild(calendarGrid.lastChild);
+            }
+            
+            // Añadir días vacíos para alinear el primer día
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Añadir los días del mes
+            for (let day = 1; day <= monthDays; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                // Marcar el día del evento (21 de febrero)
+                if (day === 21) {
+                    dayElement.classList.add('event');
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+        
+        generateCalendar();
+        
+        // Agregar eventos al calendario (MODIFICADO PARA AGREGAR DOS EVENTOS)
+        document.getElementById('addToCalendar').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Crear eventos para calendario - CEREMONIA
+            const startDateCeremony = new Date('2026-02-21T16:00:00');
+            const endDateCeremony = new Date('2026-02-21T17:00:00');
+            
+            // Crear eventos para calendario - FIESTA
+            const startDateParty = new Date('2026-02-21T18:00:00');
+            const endDateParty = new Date('2026-02-22T01:00:00');
+            
+            // Formato para Google Calendar - CEREMONIA
+            const ceremonyCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${formatDateForGoogle(startDateCeremony)}%2F${formatDateForGoogle(endDateCeremony)}&text=Ceremonia%20Religiosa%20XV%20A%C3%B1os%20Nataly&details=Invitaci%C3%B3n%20a%20la%20ceremonia%20religiosa%20de%20los%20quince%20a%C3%B1os%20de%20Nataly&location=Parroquia%20de%20Santiago%20Apostol.%20Josefa%20Ort%C3%ADz%20de%20Dominguez%2C%20Santiago%20Tianguistenco`;
+            
+            // Formato para Google Calendar - FIESTA
+            const partyCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${formatDateForGoogle(startDateParty)}%2F${formatDateForGoogle(endDateParty)}&text=Fiesta%20XV%20a%C3%B1os%20Nataly&details=Invitaci%C3%B3n%20a%20la%20fiesta%20de%20quince%20a%C3%B1os%20de%20Nataly&location=1ra%20Cda.%20de%20Catarino%20Gonzalez%207%2C%20Tianguistenco%20de%20Galeana%2C%2052600%20Santiago%20Tianguistenco%20de%20Galeana%2C%20M%C3%A9x.`;
+            
+            // Abrir ambos enlaces para agregar a calendario
+            window.open(ceremonyCalendarUrl, '_blank');
+            // Abrir el segundo evento después de un pequeño retraso
+            setTimeout(function() {
+                window.open(partyCalendarUrl, '_blank');
+            }, 500);
+        });
+        
+        // Función auxiliar para formatear fecha para Google Calendar
+        function formatDateForGoogle(date) {
+            return date.toISOString().replace(/-|:|\.\d+/g, '');
+        }
+        
+        // Animaciones al hacer scroll
+        function checkVisibility() {
+            const sections = document.querySelectorAll('section');
+            const elements = document.querySelectorAll('.countdown-item, .parent-card, .date-item, .calendar, .location-map, .info-item, .timeline, .timeline-item, .celebration p, .confirmation p, .ticket-selector, .footer-logo, footer p, .btn, .celebration-image, .celebration-map');
+            
+            // Verificar secciones
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const sectionBottom = section.getBoundingClientRect().bottom;
+                const sectionVisible = 150;
+                
+                if (sectionTop < window.innerHeight - sectionVisible && sectionBottom > sectionVisible) {
+                    section.classList.add('visible');
+                } else {
+                    section.classList.remove('visible');
+                }
+            });
+            
+            // Verificar elementos individuales
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementBottom = element.getBoundingClientRect().bottom;
+                const elementVisible = 100;
+                
+                if (elementTop < window.innerHeight - elementVisible && elementBottom > elementVisible) {
+                    element.classList.add('visible');
+                } else {
+                    element.classList.remove('visible');
+                }
+            });
+        }
+        
+        // Ejecutar al cargar y al hacer scroll
+        window.addEventListener('scroll', checkVisibility);
+        
+        // Control de música
+        const musicToggle = document.getElementById('musicToggle');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let isPlaying = false;
+        
+        musicToggle.addEventListener('click', function() {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                musicToggle.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                backgroundMusic.play();
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+        
+        // Confirmación de asistencia con selección de boletos
+        document.getElementById('confirmAttendance').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const ticketCount = document.getElementById('ticketCount').value;
+            
+            if (!ticketCount) {
+                alert('Por favor, indica el número de boletos requeridos');
+                return;
+            }
+            
+            const message = `Confirmamos nuestra Asistencia. Requeriremos ${ticketCount} Boleto(s)`;
+            const whatsappUrl = `https://wa.me/525564950944?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
+        });
+    </script>
+</body>
+</html>
